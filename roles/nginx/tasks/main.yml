@@ -1,0 +1,43 @@
+---
+# tasks file for nginx
+- name: install package nginx
+  yum:
+    name: nginx
+    state: latest
+  notify:
+    - Add http firewalld
+    - Add https firewalld
+    - Reload service firewalld
+    - Start service nginx
+
+- name: install package php-fpm
+  yum:
+    name: php-fpm
+    state: latest
+  notify:
+    - Start service php-fpm
+
+- name: copy index.php
+  copy:
+    src: index.php
+    dest: /usr/share/nginx/html/index.php
+
+
+######   B6.9.2.4   #######
+
+- name: copy nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - Restart_nginx
+
+- name: create /opt/nginx/ansible
+  file:
+    path: /opt/nginx/ansible
+    state: directory
+
+- name: copy index.php (v2)
+  copy:
+    src: index.php
+    dest: /opt/nginx/ansible/index.php

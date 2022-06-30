@@ -1,0 +1,40 @@
+---
+# handlers file for nginx
+- name: Add http firewalld
+  firewalld:
+    service: http
+    permanent: yes
+    zone: public
+    state: enabled
+
+- name: Add https firewalld
+  firewalld:
+    service: https
+    permanent: yes
+    zone: public
+    state: enabled
+
+- name: Reload service firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+
+- name: Start service php-fpm
+  systemd:
+    name: php-fpm
+    state: started
+    enabled: yes
+
+- name: Start service nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+######   B6.9.2.4   #######
+
+- name: Restart nginx
+  listen: Restart_nginx
+  systemd:
+    name: nginx
+    state: restarted
